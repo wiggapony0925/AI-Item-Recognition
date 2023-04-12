@@ -6,7 +6,7 @@ net = cv2.dnn.readNet("dnn_model/yolov4-tiny.weights",
 #object dection model
 model = cv2.dnn_DetectionModel(net)   #pass the networks   #0 -> 225 scale
 model.setInputParams(size=(320, 320), scale=1/225)#320x320 -> img
-
+                        #320
 #Classes Files
 classes = []
 with open("dnn_model/classes.txt", 'r') as file_object:
@@ -17,8 +17,13 @@ print("classes id name")
 print(classes[0])
         
 
-#Camera Frame And Setup
+#Camera Frame And Setup     ======(CAMERA)======
 cap = cv2.VideoCapture(0)
+#Settings
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+# HD 1920 x1888 
+
 
 while True:
     ret, frame = cap.read()
