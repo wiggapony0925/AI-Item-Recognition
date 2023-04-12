@@ -15,9 +15,16 @@ while True:
     ret, frame = cap.read()
     
     #object dection()  #bboxes or boxes 
-    (class_ids, score, bboxes)= model.detect(frame) #class ids, score, boxess
+    (class_ids, scores, bboxes)= model.detect(frame) #class ids, score, boxess
+
+  #display objects
+    for class_id, score, bbox in zip(class_ids, scores, bboxes):
+        (x, y, w, h) = bbox
+        print(x, y, w, h)                            #color        thickness
+        cv2.rectangle(frame, (x,y), (x + w, y +h), (255, 102, 102), 3) #add a button to change the color based on the background
+
     print("class ids", class_ids)
-    print("score", score)
+    print("score", scores)
     print("binding boxes", bboxes)
         
     cv2.imshow("Frame", frame)
