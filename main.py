@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 #opencv DNN Deep Neural Networks 
 net = cv2.dnn.readNet("dnn_model/yolov4-tiny.weights",
@@ -28,11 +29,13 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 def click_button(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(x,y)
-
+        polygon = np.array([[(20,20), (220,20), (220,70),(20,70)]])
+        is_inside = cv2.pointPolygonTest(polygon, (x,y), False)
+        if is_inside > 0:
+            print("inside")
 #Create window (BUTTON)  
 cv2.namedWindow("Frame")
 cv2.setMouseCallback('Frame', click_button)#function
-
 
 while True:
     ret, frame = cap.read()
@@ -43,14 +46,17 @@ while True:
   #display objects
     for class_id, score, bbox in zip(class_ids, scores, bboxes):
         (x, y, w, h) = bbox
-        print(x, y, w, h)     
+        #print(x, y, w, h)     
         class_name = classes[class_id]
     
         cv2.rectangle(frame, (x,y), (x + w, y +h), (255, 102, 102), 3) #add a button to change the color based on the background
         cv2.putText(frame, str(class_name), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 102 , 102), 2)
         
     #  ======BUTTON=======
-    cv2.rectangle(frame, (20,20), (150,70), (0, 0, 200), -1 )#button location 
-        
+    #cv2.rectangle(frame, (20,20), (220,70), (0, 0, 200), -1 )#button location 
+    polygon = np.array([[(20,20),(220,20), (220,70),(20,70)]])
+    cv2.fillPoly(frame, polygon, (0,0, 200))
+    cv2.putText(frame, "Person", (30,60), cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255),3)
+    
     cv2.imshow("Frame", frame)
     cv2.waitKey(1)#mili second
