@@ -50,7 +50,7 @@ while True:
         cv2.putText(frame, str(class_name), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 102 , 102), 2)
         
     #  ======BUTTON=======
-    cv2.rectangle(frame, (20,20) )#button location 
+    cv2.rectangle(frame, (20,20), (150,70), (0, 0, 200), -1 )#button location 
         
     cv2.imshow("Frame", frame)
     cv2.waitKey(1)#mili second
