@@ -18,8 +18,8 @@ This is a Python project that uses OpenCV and YOLOv4 for object detection. It al
 
 ## Images 
 ignore my face lol
-![first image](images/img1.jpg)
-![second image](images/img2jpg)
+![first image](images/img1.png)
+![second image](images/img2.png)
 
 
 ## Contributing
