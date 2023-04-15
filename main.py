@@ -1,5 +1,16 @@
 import cv2
 import numpy as np
+from gui_buttons import Buttons 
+
+#__init__ buttons
+button = Buttons()
+button.add_button('person', 20,20)
+button.add_button('cell phone', 20,20)
+button.add_button('keyboard', 20,20)
+button.add_button('remote', 20,20)
+button.add_button('scissors', 20,20)
+
+colors = buttons.color 
 
 #opencv DNN Deep Neural Networks 
 net = cv2.dnn.readNet("dnn_model/yolov4-tiny.weights",
@@ -15,11 +26,11 @@ with open("dnn_model/classes.txt", 'r') as file_object:
         class_name = class_name.strip()
         classes.append(class_name)
 print("classes id name")
-print(classes[0])
+print(classes)
         
 
 #Camera Frame And Setup     ======(CAMERA)======
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(4)
 #Settings
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -33,6 +44,13 @@ def click_button(event, x, y, flags, params):
         is_inside = cv2.pointPolygonTest(polygon, (x,y), False)
         if is_inside > 0:
             print("inside")
+            if button_person is False:
+                button_person = True
+            else:
+                button_person = False
+            
+            print("now  button is: ", button_person)
+        
 #Create window (BUTTON)  
 cv2.namedWindow("Frame")
 cv2.setMouseCallback('Frame', click_button)#function
