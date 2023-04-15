@@ -16,6 +16,12 @@ This is a Python project that uses OpenCV and YOLOv4 for object detection. It al
 2. Select the objects you want to detect by clicking on the GUI buttons.
 3. Press the `Esc` key to exit the program.
 
+## Images 
+ignore my face lol
+![first image](images/img1.jpg)
+![second image](images/img2jpg)
+
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or have any suggestions, please open an issue or create a pull request.
