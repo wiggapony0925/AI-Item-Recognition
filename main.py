@@ -24,6 +24,15 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 # HD 1920 x1888 
 
+#FUNCTIONS 
+def click_button(event, x, y, flags, params):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(x,y)
+
+#Create window (BUTTON)  
+cv2.namedWindow("Frame")
+cv2.setMouseCallback('Frame', click_button)#function
+
 
 while True:
     ret, frame = cap.read()
@@ -40,9 +49,8 @@ while True:
         cv2.rectangle(frame, (x,y), (x + w, y +h), (255, 102, 102), 3) #add a button to change the color based on the background
         cv2.putText(frame, str(class_name), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 102 , 102), 2)
         
-    print("class ids", class_ids)
-    print("score", scores)
-    print("binding boxes", bboxes)
+    #  ======BUTTON=======
+    cv2.rectangle(frame, (20,20) )#button location 
         
     cv2.imshow("Frame", frame)
     cv2.waitKey(1)#mili second
