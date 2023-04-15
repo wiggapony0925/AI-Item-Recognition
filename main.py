@@ -1,16 +1,15 @@
 import cv2
-import numpy as np
 from gui_buttons import Buttons 
 
 #__init__ buttons
 button = Buttons()
 button.add_button('person', 20,20)
-button.add_button('cell phone', 20,20)
-button.add_button('keyboard', 20,20)
-button.add_button('remote', 20,20)
-button.add_button('scissors', 20,20)
+button.add_button('cell phone', 20,100)
+button.add_button('keyboard', 20,180)
+button.add_button('remote', 20,260)
+button.add_button('scissors', 20,340)
 
-colors = buttons.color 
+colors = button.colors
 
 #opencv DNN Deep Neural Networks 
 net = cv2.dnn.readNet("dnn_model/yolov4-tiny.weights",
@@ -30,51 +29,47 @@ print(classes)
         
 
 #Camera Frame And Setup     ======(CAMERA)======
-cap = cv2.VideoCapture(4)
+cap = cv2.VideoCapture(0)
 #Settings
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-# HD 1920 x1888 
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720) 
 
-#FUNCTIONS 
 def click_button(event, x, y, flags, params):
+    global button_person
     if event == cv2.EVENT_LBUTTONDOWN:
-        print(x,y)
-        polygon = np.array([[(20,20), (220,20), (220,70),(20,70)]])
-        is_inside = cv2.pointPolygonTest(polygon, (x,y), False)
-        if is_inside > 0:
-            print("inside")
-            if button_person is False:
-                button_person = True
-            else:
-                button_person = False
-            
-            print("now  button is: ", button_person)
-        
-#Create window (BUTTON)  
+        button.button_click(x, y)
+
+# Create window
 cv2.namedWindow("Frame")
-cv2.setMouseCallback('Frame', click_button)#function
+cv2.setMouseCallback("Frame", click_button)
 
 while True:
+    # Get frames
     ret, frame = cap.read()
-    
-    #object dection()  #bboxes or boxes 
-    (class_ids, scores, bboxes)= model.detect(frame) #class ids, score, boxess
 
-  #display objects
+    # Get active buttons list
+    active_buttons = button.active_buttons_list()
+    #print("Active buttons", active_buttons)
+
+    # Object Detection
+    (class_ids, scores, bboxes) = model.detect(frame, confThreshold=0.3, nmsThreshold=.4)
     for class_id, score, bbox in zip(class_ids, scores, bboxes):
         (x, y, w, h) = bbox
-        #print(x, y, w, h)     
         class_name = classes[class_id]
-    
-        cv2.rectangle(frame, (x,y), (x + w, y +h), (255, 102, 102), 3) #add a button to change the color based on the background
-        cv2.putText(frame, str(class_name), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 102 , 102), 2)
-        
-    #  ======BUTTON=======
-    #cv2.rectangle(frame, (20,20), (220,70), (0, 0, 200), -1 )#button location 
-    polygon = np.array([[(20,20),(220,20), (220,70),(20,70)]])
-    cv2.fillPoly(frame, polygon, (0,0, 200))
-    cv2.putText(frame, "Person", (30,60), cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255),3)
-    
+        color = colors[class_id]
+
+        if class_name in active_buttons:
+            cv2.putText(frame, class_name, (x, y - 10), cv2.FONT_HERSHEY_PLAIN, 3, color, 2)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 3)
+
+
+    # Display buttons
+    button.display_buttons(frame)
+
     cv2.imshow("Frame", frame)
-    cv2.waitKey(1)#mili second
+    key = cv2.waitKey(1)
+    if key == 27:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
